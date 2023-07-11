@@ -1,0 +1,11 @@
+{
+  "name": "tanks-phaser",
+  "version": "1.0.0",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server -c-1 -o"
+  },
+  "dependencies": {
+    "phaser3-rex-plugins": "^1.60.3"
+  }
+}
