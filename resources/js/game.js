@@ -1,7 +1,9 @@
-import BoardPlugin from 'phaser3-rex-plugins/plugins/board-plugin.js';
+var gameSettings = {
+    playerSpeed: 50
+}
 var config = {
-    width: 600,
-    height: 600,
+    width: 30*8,
+    height: 40*8,
     backgroundColor: 0x000000,
     scene: [Level1],
     pixelArt: true,
@@ -10,14 +12,6 @@ var config = {
       arcade: {
         debug: false
       }
-    },
-    plugins: {
-        scene: [{
-            key: 'rexBoard',
-            plugin: BoardPlugin,
-            mapping: 'rexBoard'
-        },
-        ]
     }
   }
 var game = new Phaser.Game(config);
