@@ -6,10 +6,11 @@ class Level1 extends Phaser.Scene {
     preload() {
         this.load.image('tiles', 'resources/assets/map/jawbreaker/jawbreaker_tiles.png');
         this.load.tilemapTiledJSON('map', 'resources/assets/map/jawbreaker/level_1.json');
-        this.load.image('player', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Hulls_Color_A/Hull_02.png');
-        this.load.image('lightShell', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Effects/Light_Shell.png');
         this.load.image('track1A', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Tracks/Track_1_A.png');
         this.load.image('track1B', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Tracks/Track_1_B.png');
+        this.load.image('hull2', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Hulls_Color_A/Hull_02.png');
+        this.load.image('gun2', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Weapon_Color_A/Gun_02.png');
+        this.load.image('lightShell', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Effects/Light_Shell.png');
     }
 
     create() {
@@ -19,7 +20,6 @@ class Level1 extends Phaser.Scene {
         const wallsLayer = map.createLayer("walls", tileset, 0, 0);
         wallsLayer.setCollisionBetween(1, 67);
 
-        // Create the animation from the generated frame names
         this.anims.create({
             key: 'track1Animation',
             frames: [
@@ -27,7 +27,7 @@ class Level1 extends Phaser.Scene {
                 { key: 'track1B', frame: 1 }
             ],
             frameRate: 10,
-            repeat: -1, // Set to -1 for infinite looping
+            repeat: -1,
         });
 
         const playerStartX = 50*8;
@@ -43,10 +43,16 @@ class Level1 extends Phaser.Scene {
         this.track1aRight.x += 20;
         this.track1aRight.scale = 0.25;
 
-        this.player = this.physics.add.sprite(playerStartX, playerStartY, 'player');
-        this.player.setScale(0.25);
+        this.player = this.physics.add.sprite(playerStartX, playerStartY, 'hull2');
+        this.player.scale = 0.25;
 
+        this.gun = this.physics.add.sprite(playerStartX, playerStartY, 'gun2');
+        this.gun.scale = 0.25;
+
+        this.physics.add.collider(this.track1aLeft, wallsLayer);
+        this.physics.add.collider(this.track1aRight, wallsLayer);
         this.physics.add.collider(this.player, wallsLayer);
+        this.physics.add.collider(this.gun, wallsLayer);
 
         this.cursorKeys = this.input.keyboard.createCursorKeys();
         this.player.setCollideWorldBounds(true);
@@ -103,6 +109,10 @@ class Level1 extends Phaser.Scene {
                 this.track1aLeft.play('track1Animation');
                 this.track1aRight.play('track1Animation');
             }
+
+            this.gun.x = player.x;
+            this.gun.y = player.y;
+            this.gun.rotation = player.rotation;
         } else {
             player.body.velocity.set(0);
             if(this.track1aLeft.anims.isPlaying){
