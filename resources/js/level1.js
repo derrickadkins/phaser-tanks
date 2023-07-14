@@ -9,6 +9,7 @@ class Level1 extends Phaser.Scene {
         this.load.image('track1A', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Tracks/Track_1_A.png');
         this.load.image('track1B', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Tracks/Track_1_B.png');
         this.load.image('hull2', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Hulls_Color_A/Hull_02.png');
+        this.load.image('gun1', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Weapon_Color_A/Gun_01.png');
         this.load.image('gun2', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Weapon_Color_A/Gun_02.png');
         this.load.image('lightShell', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Effects/Light_Shell.png');
     }
@@ -48,11 +49,6 @@ class Level1 extends Phaser.Scene {
         this.gun.setOrigin(0.5, 0.65);
         this.gun.scale = 0.25;
 
-        this.physics.add.collider(this.track1aLeft, wallsLayer);
-        this.physics.add.collider(this.track1aRight, wallsLayer);
-        this.physics.add.collider(this.player, wallsLayer);
-        this.physics.add.collider(this.gun, wallsLayer);
-
         this.cursorKeys = this.input.keyboard.createCursorKeys();
         this.player.setCollideWorldBounds(true);
 
@@ -60,7 +56,16 @@ class Level1 extends Phaser.Scene {
 
         this.projectiles = this.add.group();
 
-        // Add collision between projectiles and walls
+        this.enemies = this.add.group();
+        this.enemies.add(new Enemy(this, 50*8, 25*8));
+        this.enemies.add(new Enemy(this, 75*8, 50*8));
+        this.enemies.add(new Enemy(this, 50*8, 75*8));
+        this.enemies.add(new Enemy(this, 25*8, 50*8));
+
+        this.physics.add.collider(this.track1aLeft, wallsLayer);
+        this.physics.add.collider(this.track1aRight, wallsLayer);
+        this.physics.add.collider(this.player, wallsLayer);
+        this.physics.add.collider(this.gun, wallsLayer);
         this.physics.add.collider(this.projectiles, wallsLayer, this.projectileWallCollision, null, this);
     }
 
@@ -69,11 +74,15 @@ class Level1 extends Phaser.Scene {
         this.gunRotationManager();
 
         if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
-            new LightShell(this);
+            this.projectiles.add(new LightShell(this, this.gun.x, this.gun.y, this.gun.rotation));
         }
     
         for (var i = 0; i < this.projectiles.getChildren().length; i++) {
             this.projectiles.getChildren()[i].update();
+        }
+
+        for (var i = 0; i < this.enemies.getChildren().length; i++) {
+            this.enemies.getChildren()[i].update();
         }
     }
 
