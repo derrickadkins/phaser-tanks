@@ -6,7 +6,7 @@ class Level1 extends Phaser.Scene {
     preload() {
         this.load.image('tiles', 'resources/assets/map/jawbreaker/jawbreaker_tiles.png');
         this.load.tilemapTiledJSON('map', 'resources/assets/map/jawbreaker/level_1.json');
-        this.load.image('player', 'resources/assets/sprites/tank.png');
+        this.load.image('player', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Hulls_Color_A/Hull_02.png');
         this.load.image('lightShell', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Effects/Light_Shell.png');
 
         //todo - load the rest of the assets
@@ -19,6 +19,7 @@ class Level1 extends Phaser.Scene {
         const wallsLayer = map.createLayer("walls", tileset, 0, 0);
 
         this.player = this.physics.add.sprite(0, 0, 'player');
+        this.player.setScale(0.25);
         this.physics.add.collider(this.player, wallsLayer);
         wallsLayer.setCollisionBetween(1, 67);
 
@@ -46,20 +47,21 @@ class Level1 extends Phaser.Scene {
         //todo - add the rest of the game logic
     }
 
+    
     movePlayerManager() {
 
-        this.player.setVelocity(0);
+        const pointer = this.input.activePointer;
+        const player = this.player;
 
-        if (this.cursorKeys.left.isDown) {
-            this.player.setVelocityX(-gameSettings.playerSpeed);
-        } else if (this.cursorKeys.right.isDown) {
-            this.player.setVelocityX(gameSettings.playerSpeed);
-        }
+        if (pointer.isDown) {
+            // Calculate the angle between the player and the cursor
+            const angle = Phaser.Math.Angle.Between(player.x, player.y, pointer.x, pointer.y);
 
-        if (this.cursorKeys.up.isDown) {
-            this.player.setVelocityY(-gameSettings.playerSpeed);
-        } else if (this.cursorKeys.down.isDown) {
-            this.player.setVelocityY(gameSettings.playerSpeed);
+            // Set the velocity for the player to move towards the cursor
+            player.body.velocity.x = Math.cos(angle) * gameSettings.playerSpeed;
+            player.body.velocity.y = Math.sin(angle) * gameSettings.playerSpeed;
+        } else {
+            player.body.velocity.set(0);
         }
     }
 }
