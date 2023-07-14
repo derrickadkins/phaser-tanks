@@ -1,17 +1,17 @@
 class LightShell extends Phaser.GameObjects.Sprite {
     constructor(scene) {
-        const x = scene.player.x;
-        const y = scene.player.y;
+        const x = scene.gun.x;
+        const y = scene.gun.y;
         super(scene, x, y, 'lightShell');
         scene.add.existing(this);
         scene.physics.world.enableBody(this);
     
-        // Set the rotation of the projectile to match the player's
-        this.rotation = scene.player.rotation;
+        // Set the rotation of the projectile to match the gun's
+        this.rotation = scene.gun.rotation;
     
-        // Calculate the offset based on the tank's rotation
+        // Calculate the offset based on the gun's rotation
         const offset = new Phaser.Math.Vector2(0, -30); // Adjust the offset as needed
-        Phaser.Math.Rotate(offset, scene.player.rotation);
+        Phaser.Math.Rotate(offset, scene.gun.rotation);
         this.x += offset.x;
         this.y += offset.y;
 
