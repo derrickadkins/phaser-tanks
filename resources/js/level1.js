@@ -52,14 +52,18 @@ class Level1 extends Phaser.Scene {
 
         const pointer = this.input.activePointer;
         const player = this.player;
+        const distance = Phaser.Math.Distance.Between(player.x, player.y, pointer.x, pointer.y);
 
-        if (pointer.isDown) {
+        if (pointer.isDown && distance > 10) {
             // Calculate the angle between the player and the cursor
             const angle = Phaser.Math.Angle.Between(player.x, player.y, pointer.x, pointer.y);
 
             // Set the velocity for the player to move towards the cursor
             player.body.velocity.x = Math.cos(angle) * gameSettings.playerSpeed;
             player.body.velocity.y = Math.sin(angle) * gameSettings.playerSpeed;
+
+            // Convert the angle to degrees and apply it to the player's rotation
+            player.rotation = angle + Phaser.Math.DegToRad(90);
         } else {
             player.body.velocity.set(0);
         }
