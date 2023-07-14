@@ -15,6 +15,11 @@ class Level1 extends Phaser.Scene {
     }
 
     create() {
+        // Enable multiple touch inputs
+        this.input.addPointer(2);
+        // Add the pointerdown event listener
+        this.input.on('pointerdown', this.handlePointerDown, this);
+
         const map = this.make.tilemap({ key: 'map', tilewidth: 30, tileheight: 40 });
         const tileset = map.addTilesetImage('jawbreaker_tiles', 'tiles');
         const groundLayer = map.createLayer("ground", tileset, 0, 0);
@@ -100,6 +105,17 @@ class Level1 extends Phaser.Scene {
         const distance = Phaser.Math.Distance.Between(player.x, player.y, pointer.x, pointer.y);
 
         if (pointer.isDown && distance > 10) {
+            // detect if pointer is being held down and not a tap
+            if (!pointer.startTime) {
+                // First frame of pointer down, initialize custom data
+                pointer.startTime = this.time.now;
+            }
+
+            const elapsedTime = this.time.now - pointer.startTime;
+            const holdThreshold = 750; // Adjust the hold threshold duration as needed
+
+            if (elapsedTime < holdThreshold) return;
+
             // Calculate the angle between the player and the cursor
             const angle = Phaser.Math.Angle.Between(player.x, player.y, pointer.x, pointer.y);
 
@@ -128,6 +144,7 @@ class Level1 extends Phaser.Scene {
             this.gun.x = player.x - Math.sin(player.rotation) * 10;
             this.gun.y = player.y + Math.cos(player.rotation) * 10;
         } else {
+            pointer.startTime = 0;
             player.body.velocity.set(0);
             if(this.track1aLeft.anims.isPlaying){
                 this.track1aLeft.anims.stop();
@@ -161,5 +178,29 @@ class Level1 extends Phaser.Scene {
     // Handle collision between projectiles and player
     playerProjectileCollision(player, projectile) {
         if(projectile.firedBy != player) projectile.destroy();
+    }
+
+    handlePointerDown(pointer) {
+        // Check if it's a tap event (pointer down and up without significant movement)
+        const movementThreshold = 10; // Adjust the threshold as needed
+        const downX = pointer.downX;
+        const downY = pointer.downY;
+        const upX = pointer.upX;
+        const upY = pointer.upY;
+
+        const distance = Phaser.Math.Distance.Between(downX, downY, upX, upY);
+    
+        if (distance <= movementThreshold) {
+            console.log('Tap event');
+            // stop the propagation of the event to the rest of the game objects
+            pointer.event.stopPropagation();
+            // rotate the gun towards the pointer
+            const angle = Phaser.Math.Angle.Between(this.gun.x, this.gun.y, pointer.x, pointer.y);
+            this.gun.rotation = angle + Phaser.Math.DegToRad(90);
+            // Calculate the offset based on the gun's rotation
+            const offset = new Phaser.Math.Vector2(0, -40);
+            Phaser.Math.Rotate(offset, this.gun.rotation);
+            this.projectiles.add(new LightShell(this, this.gun.x + offset.x, this.gun.y + offset.y, this.gun.rotation, this.player));
+        }
     }
 }
