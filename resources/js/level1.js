@@ -7,7 +7,7 @@ class Level1 extends Phaser.Scene {
         this.load.image('tiles', 'resources/assets/map/jawbreaker/jawbreaker_tiles.png');
         this.load.tilemapTiledJSON('map', 'resources/assets/map/jawbreaker/level_1.json');
         this.load.image('player', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Hulls_Color_A/Hull_02.png');
-        this.load.image('lightShell', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Effects/Light_Shell_cropped.png');
+        this.load.image('lightShell', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Effects/Light_Shell.png');
 
         //todo - load the rest of the assets
     }
