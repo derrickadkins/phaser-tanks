@@ -31,8 +31,8 @@ class Level1 extends Phaser.Scene {
             repeat: -1,
         });
 
-        const playerStartX = 50*8;
-        const playerStartY = 50*8;
+        const playerStartX = 25*8;
+        const playerStartY = 25*8;
 
         this.track1aLeft = this.physics.add.sprite(playerStartX, playerStartY, 'track1A');
         this.track1aLeft.x -= 20;
@@ -67,6 +67,9 @@ class Level1 extends Phaser.Scene {
         this.physics.add.collider(this.player, wallsLayer);
         this.physics.add.collider(this.gun, wallsLayer);
         this.physics.add.collider(this.projectiles, wallsLayer, this.projectileWallCollision, null, this);
+
+        this.physics.add.overlap(this.enemies, this.projectiles, this.enemyProjectileCollision, null, this);
+        this.physics.add.overlap(this.player, this.projectiles, this.playerProjectileCollision, null, this);
     }
 
     update() {
@@ -74,7 +77,10 @@ class Level1 extends Phaser.Scene {
         this.gunRotationManager();
 
         if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
-            this.projectiles.add(new LightShell(this, this.gun.x, this.gun.y, this.gun.rotation));
+            // Calculate the offset based on the gun's rotation
+            const offset = new Phaser.Math.Vector2(0, -40);
+            Phaser.Math.Rotate(offset, this.gun.rotation);
+            this.projectiles.add(new LightShell(this, this.gun.x + offset.x, this.gun.y + offset.y, this.gun.rotation, this.player));
         }
     
         for (var i = 0; i < this.projectiles.getChildren().length; i++) {
@@ -133,14 +139,27 @@ class Level1 extends Phaser.Scene {
     gunRotationManager() {
         //use arrows to rotate gun
         if (this.cursorKeys.left.isDown) {
-            this.gun.rotation -= 0.1;
+            this.gun.rotation -= 0.05;
         }else if (this.cursorKeys.right.isDown) {
-            this.gun.rotation += 0.1;
+            this.gun.rotation += 0.05;
         }
     }
 
     // Handle collision between projectiles and walls
     projectileWallCollision(projectile, wall) {
         projectile.destroy();
+    }
+
+    // Handle collision between projectiles and enemies
+    enemyProjectileCollision(enemy, projectile) {
+        if(projectile.firedBy != enemy) {
+            if(projectile.firedBy == this.player) enemy.destroy();
+            projectile.destroy();
+        }
+    }
+
+    // Handle collision between projectiles and player
+    playerProjectileCollision(player, projectile) {
+        if(projectile.firedBy != player) projectile.destroy();
     }
 }

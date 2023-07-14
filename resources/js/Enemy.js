@@ -14,10 +14,12 @@ class Enemy extends Phaser.GameObjects.Sprite {
         var angle = Math.atan2(dy, dx);
         this.rotation = angle + Phaser.Math.DegToRad(90);
 
+        const offset = new Phaser.Math.Vector2(0, -40);
+        Phaser.Math.Rotate(offset, this.rotation);
+
         // fire LightShell at player every 1 second
-        // todo: fix x and y offset
         if (this.scene.time.now > this.lastFired) {
-            this.scene.projectiles.add(new LightShell(this.scene, this.x, this.y, this.rotation));
+            this.scene.projectiles.add(new LightShell(this.scene, this.x + offset.x, this.y + offset.y, this.rotation, this));
             this.lastFired = this.scene.time.now + 1000;
         }
     }
