@@ -34,19 +34,18 @@ class Level1 extends Phaser.Scene {
         const playerStartY = 50*8;
 
         this.track1aLeft = this.physics.add.sprite(playerStartX, playerStartY, 'track1A');
-        this.track1aLeft.setOrigin(0.5, 0.5);
         this.track1aLeft.x -= 20;
         this.track1aLeft.scale = 0.25;
 
         this.track1aRight = this.physics.add.sprite(playerStartX, playerStartY, 'track1A');
-        this.track1aRight.setOrigin(0.5, 0.5);
         this.track1aRight.x += 20;
         this.track1aRight.scale = 0.25;
 
         this.player = this.physics.add.sprite(playerStartX, playerStartY, 'hull2');
         this.player.scale = 0.25;
 
-        this.gun = this.physics.add.sprite(playerStartX, playerStartY, 'gun2');
+        this.gun = this.physics.add.sprite(playerStartX, playerStartY + 10, 'gun2');
+        this.gun.setOrigin(0.5, 0.65);
         this.gun.scale = 0.25;
 
         this.physics.add.collider(this.track1aLeft, wallsLayer);
@@ -67,6 +66,7 @@ class Level1 extends Phaser.Scene {
 
     update() {
         this.movePlayerManager();
+        this.gunRotationManager();
 
         if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
             new LightShell(this);
@@ -110,15 +110,23 @@ class Level1 extends Phaser.Scene {
                 this.track1aRight.play('track1Animation');
             }
 
-            this.gun.x = player.x;
-            this.gun.y = player.y;
-            this.gun.rotation = player.rotation;
+            this.gun.x = player.x - Math.sin(player.rotation) * 10;
+            this.gun.y = player.y + Math.cos(player.rotation) * 10;
         } else {
             player.body.velocity.set(0);
             if(this.track1aLeft.anims.isPlaying){
                 this.track1aLeft.anims.stop();
                 this.track1aRight.anims.stop();
             }
+        }
+    }
+
+    gunRotationManager() {
+        //use arrows to rotate gun
+        if (this.cursorKeys.left.isDown) {
+            this.gun.rotation -= 0.1;
+        }else if (this.cursorKeys.right.isDown) {
+            this.gun.rotation += 0.1;
         }
     }
 
