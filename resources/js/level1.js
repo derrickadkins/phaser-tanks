@@ -18,7 +18,7 @@ class Level1 extends Phaser.Scene {
         const groundLayer = map.createLayer("ground", tileset, 0, 0);
         const wallsLayer = map.createLayer("walls", tileset, 0, 0);
 
-        this.player = this.physics.add.sprite(0, 0, 'player');
+        this.player = this.physics.add.sprite(50*8, 50*8, 'player');
         this.player.setScale(0.25);
         this.physics.add.collider(this.player, wallsLayer);
         wallsLayer.setCollisionBetween(1, 67);
