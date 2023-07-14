@@ -14,6 +14,8 @@ class LightShell extends Phaser.GameObjects.Sprite {
         Phaser.Math.Rotate(offset, scene.player.rotation);
         this.x += offset.x;
         this.y += offset.y;
+
+        this.scale = 0.5;
     
         scene.projectiles.add(this);
       }
