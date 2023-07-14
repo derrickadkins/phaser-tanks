@@ -30,7 +30,8 @@ class Level1 extends Phaser.Scene {
 
         this.projectiles = this.add.group();
 
-        //todo - add the rest of the assets
+        // Add collision between projectiles and walls
+        this.physics.add.collider(this.projectiles, wallsLayer, this.projectileWallCollision, null, this);
     }
 
     update() {
@@ -67,5 +68,10 @@ class Level1 extends Phaser.Scene {
         } else {
             player.body.velocity.set(0);
         }
+    }
+
+    // Handle collision between projectiles and walls
+    projectileWallCollision(projectile, wall) {
+        projectile.destroy();
     }
 }
