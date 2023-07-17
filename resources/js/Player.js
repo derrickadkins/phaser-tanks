@@ -10,7 +10,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.track1aRight.x += 20;
         this.track1aRight.scale = 0.25;
 
-        this.gun = scene.physics.add.sprite(x, y, 'gun2');
+        this.gun = scene.physics.add.sprite(x, y + 10, 'gun2');
+        this.gun.setOrigin(0.5, 0.65);
         this.gun.scale = 0.25;
         this.gun.depth = 1;
 
@@ -27,7 +28,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         if (Phaser.Input.Keyboard.JustDown(this.scene.spacebar)) {
             // Calculate the offset based on the gun's rotation
-            const offset = new Phaser.Math.Vector2(0, -40);
+            const offset = new Phaser.Math.Vector2(0, -30);
             Phaser.Math.Rotate(offset, this.gun.rotation);
             this.scene.projectiles.add(new LightShell(this.scene, this.gun.x + offset.x, this.gun.y + offset.y, this.gun.rotation, this));
         }
