@@ -5,7 +5,7 @@ var config = {
     width: 100*8,
     height: 100*8,
     backgroundColor: 0x000000,
-    scene: [Level1],
+    scene: [TitleScreen, Level1],
     pixelArt: true,
     physics: {
       default: "arcade",

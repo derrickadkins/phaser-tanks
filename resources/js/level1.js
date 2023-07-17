@@ -3,38 +3,15 @@ class Level1 extends Phaser.Scene {
         super("level1");
     }
 
-    preload() {
-        this.load.image('tiles', 'resources/assets/map/jawbreaker/jawbreaker_tiles.png');
-        this.load.tilemapTiledJSON('map', 'resources/assets/map/jawbreaker/level_1.json');
-        this.load.image('track1A', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Tracks/Track_1_A.png');
-        this.load.image('track1B', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Tracks/Track_1_B.png');
-        this.load.image('hull2', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Hulls_Color_A/Hull_02.png');
-        this.load.image('gun1', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Weapon_Color_A/Gun_01.png');
-        this.load.image('gun2', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Weapon_Color_A/Gun_02.png');
-        this.load.image('lightShell', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Effects/Light_Shell.png');
-    }
-
     create() {
-        // Enable multiple touch inputs
-        this.input.addPointer(2);
         // Add the pointerdown event listener
         this.input.on('pointerdown', this.handlePointerDown, this);
 
-        const map = this.make.tilemap({ key: 'map', tilewidth: 30, tileheight: 40 });
+        const map = this.make.tilemap({ key: 'map', tilewidth: 100, tileheight: 100 });
         const tileset = map.addTilesetImage('jawbreaker_tiles', 'tiles');
         const groundLayer = map.createLayer("ground", tileset, 0, 0);
         const wallsLayer = map.createLayer("walls", tileset, 0, 0);
         wallsLayer.setCollisionBetween(1, 67);
-
-        this.anims.create({
-            key: 'track1Animation',
-            frames: [
-                { key: 'track1A', frame: 0 },
-                { key: 'track1B', frame: 1 }
-            ],
-            frameRate: 10,
-            repeat: -1,
-        });
 
         const playerStartX = 25*8;
         const playerStartY = 25*8;
@@ -71,8 +48,11 @@ class Level1 extends Phaser.Scene {
         this.physics.add.collider(this.track1aRight, wallsLayer);
         this.physics.add.collider(this.player, wallsLayer);
         this.physics.add.collider(this.gun, wallsLayer);
+        this.physics.add.collider(this.enemies, wallsLayer);
+        this.physics.add.collider(this.enemies, this.player);
+        this.physics.add.collider(this.enemies, this.enemies);
+        
         this.physics.add.collider(this.projectiles, wallsLayer, this.projectileWallCollision, null, this);
-
         this.physics.add.overlap(this.enemies, this.projectiles, this.enemyProjectileCollision, null, this);
         this.physics.add.overlap(this.player, this.projectiles, this.playerProjectileCollision, null, this);
     }
@@ -104,7 +84,9 @@ class Level1 extends Phaser.Scene {
         const player = this.player;
         const distance = Phaser.Math.Distance.Between(player.x, player.y, pointer.x, pointer.y);
 
+        // todo: fix interference between pointers
         if (pointer.isDown && distance > 10) {
+            //console.log('pointer down:'+pointer.id);
             // detect if pointer is being held down and not a tap
             if (!pointer.startTime) {
                 // First frame of pointer down, initialize custom data
@@ -191,7 +173,7 @@ class Level1 extends Phaser.Scene {
         const distance = Phaser.Math.Distance.Between(downX, downY, upX, upY);
     
         if (distance <= movementThreshold) {
-            console.log('Tap event');
+            //console.log('Tap event:'+pointer.id);
             // stop the propagation of the event to the rest of the game objects
             pointer.event.stopPropagation();
             // rotate the gun towards the pointer
