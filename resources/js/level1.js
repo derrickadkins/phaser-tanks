@@ -7,11 +7,11 @@ class Level1 extends Phaser.Scene {
         // Add the pointerdown event listener
         this.input.on('pointerdown', this.handlePointerDown, this);
 
-        const map = this.make.tilemap({ key: 'map', tilewidth: 100, tileheight: 100 });
-        const tileset = map.addTilesetImage('jawbreaker_tiles', 'tiles');
-        const groundLayer = map.createLayer("ground", tileset, 0, 0);
-        const wallsLayer = map.createLayer("walls", tileset, 0, 0);
-        wallsLayer.setCollisionBetween(1, 67);
+        this.map = this.make.tilemap({ key: 'map', tilewidth: 100, tileheight: 100 });
+        const tileset = this.map.addTilesetImage('jawbreaker_tiles', 'tiles');
+        const groundLayer = this.map.createLayer("ground", tileset, 0, 0);
+        this.wallsLayer = this.map.createLayer("walls", tileset, 0, 0);
+        this.wallsLayer.setCollisionBetween(1, 67);
 
         const playerStartX = 25*8;
         const playerStartY = 25*8;
@@ -44,15 +44,15 @@ class Level1 extends Phaser.Scene {
         this.enemies.add(new Enemy(this, 50*8, 75*8));
         this.enemies.add(new Enemy(this, 25*8, 50*8));
 
-        this.physics.add.collider(this.track1aLeft, wallsLayer);
-        this.physics.add.collider(this.track1aRight, wallsLayer);
-        this.physics.add.collider(this.player, wallsLayer);
-        this.physics.add.collider(this.gun, wallsLayer);
-        this.physics.add.collider(this.enemies, wallsLayer);
+        this.physics.add.collider(this.track1aLeft, this.wallsLayer);
+        this.physics.add.collider(this.track1aRight, this.wallsLayer);
+        this.physics.add.collider(this.player, this.wallsLayer);
+        this.physics.add.collider(this.gun, this.wallsLayer);
+        this.physics.add.collider(this.enemies, this.wallsLayer);
         this.physics.add.collider(this.enemies, this.player);
         this.physics.add.collider(this.enemies, this.enemies);
         
-        this.physics.add.collider(this.projectiles, wallsLayer, this.projectileWallCollision, null, this);
+        this.physics.add.collider(this.projectiles, this.wallsLayer, this.projectileWallCollision, null, this);
         this.physics.add.overlap(this.enemies, this.projectiles, this.enemyProjectileCollision, null, this);
         this.physics.add.overlap(this.player, this.projectiles, this.playerProjectileCollision, null, this);
     }
