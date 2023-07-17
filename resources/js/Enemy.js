@@ -1,5 +1,5 @@
 class Enemy extends Phaser.GameObjects.Sprite {
-    constructor(scene, x, y) {
+    constructor(scene, x, y, health, speed) {
         super(scene, x, y, 'hull1');
 
         this.track1aLeft = scene.physics.add.sprite(x, y, 'track1A');
@@ -16,6 +16,9 @@ class Enemy extends Phaser.GameObjects.Sprite {
 
         this.scale = 0.25;
         this.lastFired = 0;
+
+        this.health = health;
+        this.speed = speed;
 
         scene.add.existing(this);
         scene.physics.world.enableBody(this);
@@ -56,8 +59,8 @@ class Enemy extends Phaser.GameObjects.Sprite {
         
         // move enemy towards player while enemy is 100 units away
         if (Phaser.Math.Distance.Between(this.x, this.y, this.scene.player.x, this.scene.player.y) > 100) {
-            this.body.velocity.x = Math.cos(angle) * (gameSettings.playerSpeed * 0.7);
-            this.body.velocity.y = Math.sin(angle) * (gameSettings.playerSpeed * 0.7);
+            this.body.velocity.x = Math.cos(angle) * this.speed;
+            this.body.velocity.y = Math.sin(angle) * this.speed;
             
             if(!this.track1aLeft.anims.isPlaying){
                 this.track1aLeft.play('track1Animation');
@@ -78,6 +81,13 @@ class Enemy extends Phaser.GameObjects.Sprite {
         if (this.scene.time.now > this.lastFired) {
             this.scene.projectiles.add(new LightShell(this.scene, this.x + offset.x, this.y + offset.y, this.rotation, this));
             this.lastFired = this.scene.time.now + 1000;
+        }
+    }
+
+    hit() {
+        this.health -= 10;
+        if (this.health <= 0) {
+            this.destroy();
         }
     }
 

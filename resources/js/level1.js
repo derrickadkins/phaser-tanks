@@ -3,16 +3,15 @@ class Level1 extends Phaser.Scene {
         super("level1");
     }
 
-    create() {
-               
+    create() { 
         this.map = this.make.tilemap({ key: 'map', tilewidth: 100, tileheight: 100 });
         const tileset = this.map.addTilesetImage('jawbreaker_tiles', 'tiles');
         const groundLayer = this.map.createLayer("ground", tileset, 0, 0);
         this.wallsLayer = this.map.createLayer("walls", tileset, 0, 0);
         this.wallsLayer.setCollisionBetween(1, 67);
         
-        const playerStartX = 25*8;
-        const playerStartY = 25*8;
+        const playerStartX = 50*8;
+        const playerStartY = 50*8;
         
         this.player = new Player(this, playerStartX, playerStartY);
 
@@ -21,11 +20,13 @@ class Level1 extends Phaser.Scene {
 
         this.projectiles = this.add.group();
 
+        const enemyHealth = 10;
+        const enemySpeed = this.player.speed * 0.25;
         this.enemies = this.add.group();
-        this.enemies.add(new Enemy(this, 50*8, 25*8));
-        this.enemies.add(new Enemy(this, 75*8, 50*8));
-        this.enemies.add(new Enemy(this, 50*8, 75*8));
-        this.enemies.add(new Enemy(this, 25*8, 50*8));
+        this.enemies.add(new Enemy(this, 50*8, 25*8, enemyHealth, enemySpeed));
+        this.enemies.add(new Enemy(this, 75*8, 50*8, enemyHealth, enemySpeed));
+        this.enemies.add(new Enemy(this, 50*8, 75*8, enemyHealth, enemySpeed));
+        this.enemies.add(new Enemy(this, 25*8, 50*8, enemyHealth, enemySpeed));
 
         this.physics.add.collider(this.player, this.wallsLayer);
         this.physics.add.collider(this.enemies, this.wallsLayer);
@@ -60,13 +61,16 @@ class Level1 extends Phaser.Scene {
     // Handle collision between projectiles and enemies
     enemyProjectileCollision(enemy, projectile) {
         if(projectile.firedBy != enemy) {
-            if(projectile.firedBy == this.player) enemy.destroy();
+            if(projectile.firedBy == this.player) enemy.hit();
             projectile.destroy();
         }
     }
 
     // Handle collision between projectiles and player
     playerProjectileCollision(player, projectile) {
-        if(projectile.firedBy != player) projectile.destroy();
+        if(projectile.firedBy != player) {
+            player.hit();
+            projectile.destroy();
+        }
     }
 }

@@ -17,6 +17,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.scale = 0.25;
 
+        this.health = 100;
+        this.speed = 50;
+
         scene.add.existing(this)
         scene.physics.world.enableBody(this);
         this.setCollideWorldBounds(true);
@@ -57,8 +60,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             const angle = Phaser.Math.Angle.Between(this.x, this.y, pointer.x, pointer.y);
 
             // Set the velocity for the player to move towards the cursor
-            this.body.velocity.x = Math.cos(angle) * gameSettings.playerSpeed;
-            this.body.velocity.y = Math.sin(angle) * gameSettings.playerSpeed;
+            this.body.velocity.x = Math.cos(angle) * this.speed;
+            this.body.velocity.y = Math.sin(angle) * this.speed;
 
             // Convert the angle to degrees and apply it to the player's rotation
             this.rotation = angle + Phaser.Math.DegToRad(90);
@@ -123,5 +126,19 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             Phaser.Math.Rotate(offset, gun.rotation);
             this.projectiles.add(new LightShell(this, gun.x + offset.x, gun.y + offset.y, gun.rotation, this.player));
         }
+    }
+
+    hit() {
+        this.health -= 10;
+        if (this.health <= 0) {
+            this.scene.scene.start('gameOver');
+        }
+    }
+
+    destroy() {
+        this.track1aLeft.destroy();
+        this.track1aRight.destroy();
+        this.gun.destroy();
+        super.destroy();
     }
 }
