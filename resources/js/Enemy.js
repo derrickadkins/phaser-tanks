@@ -50,14 +50,14 @@ class Enemy extends Phaser.GameObjects.Sprite {
         this.track1aRight.x = this.x - Math.cos(this.rotation) * 20;
         this.track1aRight.y = this.y - Math.sin(this.rotation) * 20;
         this.track1aRight.rotation = this.rotation;
+
+        this.gun.x = this.x;
+        this.gun.y = this.y;
         
         // move enemy towards player while enemy is 100 units away
         if (Phaser.Math.Distance.Between(this.x, this.y, this.scene.player.x, this.scene.player.y) > 100) {
             this.body.velocity.x = Math.cos(angle) * (gameSettings.playerSpeed * 0.7);
             this.body.velocity.y = Math.sin(angle) * (gameSettings.playerSpeed * 0.7);
-
-            this.gun.x = this.x;
-            this.gun.y = this.y;
             
             if(!this.track1aLeft.anims.isPlaying){
                 this.track1aLeft.play('track1Animation');
