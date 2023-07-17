@@ -1,11 +1,8 @@
-var gameSettings = {
-    playerSpeed: 50
-}
 var config = {
     width: 100*8,
     height: 100*8,
     backgroundColor: 0x000000,
-    scene: [TitleScreen, Level1],
+    scene: [TitleScreen, Level1, GameOver],
     pixelArt: true,
     physics: {
       default: "arcade",
