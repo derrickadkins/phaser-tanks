@@ -10,7 +10,7 @@ class Enemy extends Phaser.GameObjects.Sprite {
         this.track1aRight.x += 20;
         this.track1aRight.scale = 0.25;
 
-        this.gun = scene.add.sprite(x, y, 'gun1');
+        this.gun = scene.physics.add.sprite(x, y, 'gun1');
         this.gun.scale = 0.25;
         this.gun.depth = 1;
 
@@ -25,7 +25,14 @@ class Enemy extends Phaser.GameObjects.Sprite {
         // detect if enemy has line of sight to player
         var ray = new Phaser.Geom.Line(this.x, this.y, this.scene.player.x, this.scene.player.y);
         var walls = this.scene.map.getTilesWithinShape(ray, { isNotEmpty: true }, this.scene.camera, this.scene.wallsLayer);
-        if (walls.length > 0) return;
+        if (walls.length > 0) {
+            this.body.velocity.set(0);
+            if(this.track1aLeft.anims.isPlaying){
+                this.track1aLeft.anims.stop();
+                this.track1aRight.anims.stop();
+            }
+            return;
+        }
 
         // calculate rotation to face player
         var dx = this.scene.player.x - this.x;
@@ -33,6 +40,16 @@ class Enemy extends Phaser.GameObjects.Sprite {
         var angle = Math.atan2(dy, dx);
         this.rotation = angle + Phaser.Math.DegToRad(90);
         this.gun.rotation = this.rotation;
+
+        // Set the position and rotation for the left track sprite
+        this.track1aLeft.x = this.x + Math.cos(this.rotation) * 20;
+        this.track1aLeft.y = this.y + Math.sin(this.rotation) * 20;
+        this.track1aLeft.rotation = this.rotation;
+
+        // Set the position and rotation for the right track sprite
+        this.track1aRight.x = this.x - Math.cos(this.rotation) * 20;
+        this.track1aRight.y = this.y - Math.sin(this.rotation) * 20;
+        this.track1aRight.rotation = this.rotation;
         
         // move enemy towards player while enemy is 100 units away
         if (Phaser.Math.Distance.Between(this.x, this.y, this.scene.player.x, this.scene.player.y) > 100) {
@@ -41,16 +58,6 @@ class Enemy extends Phaser.GameObjects.Sprite {
 
             this.gun.x = this.x;
             this.gun.y = this.y;
-
-            // Set the position and rotation for the left track sprite
-            this.track1aLeft.x = this.x + Math.cos(this.rotation) * 20;
-            this.track1aLeft.y = this.y + Math.sin(this.rotation) * 20;
-            this.track1aLeft.rotation = this.rotation;
-
-            // Set the position and rotation for the right track sprite
-            this.track1aRight.x = this.x - Math.cos(this.rotation) * 20;
-            this.track1aRight.y = this.y - Math.sin(this.rotation) * 20;
-            this.track1aRight.rotation = this.rotation;
             
             if(!this.track1aLeft.anims.isPlaying){
                 this.track1aLeft.play('track1Animation');
@@ -64,7 +71,7 @@ class Enemy extends Phaser.GameObjects.Sprite {
             }
         }
 
-        const offset = new Phaser.Math.Vector2(0, -40);
+        const offset = new Phaser.Math.Vector2(0, -30);
         Phaser.Math.Rotate(offset, this.rotation);
 
         // fire LightShell at player every 1 second
