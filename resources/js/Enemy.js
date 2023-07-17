@@ -1,11 +1,22 @@
 class Enemy extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y) {
         super(scene, x, y, 'hull1');
+
+        this.track1aLeft = scene.physics.add.sprite(x, y, 'track1A');
+        this.track1aLeft.x -= 20;
+        this.track1aLeft.scale = 0.25;
+
+        this.track1aRight = scene.physics.add.sprite(x, y, 'track1A');
+        this.track1aRight.x += 20;
+        this.track1aRight.scale = 0.25;
+
         this.gun = scene.add.sprite(x, y, 'gun1');
         this.gun.scale = 0.25;
         this.gun.depth = 1;
+
         this.scale = 0.25;
         this.lastFired = 0;
+
         scene.add.existing(this);
         scene.physics.world.enableBody(this);
     }
@@ -30,8 +41,27 @@ class Enemy extends Phaser.GameObjects.Sprite {
 
             this.gun.x = this.x;
             this.gun.y = this.y;
+
+            // Set the position and rotation for the left track sprite
+            this.track1aLeft.x = this.x + Math.cos(this.rotation) * 20;
+            this.track1aLeft.y = this.y + Math.sin(this.rotation) * 20;
+            this.track1aLeft.rotation = this.rotation;
+
+            // Set the position and rotation for the right track sprite
+            this.track1aRight.x = this.x - Math.cos(this.rotation) * 20;
+            this.track1aRight.y = this.y - Math.sin(this.rotation) * 20;
+            this.track1aRight.rotation = this.rotation;
+            
+            if(!this.track1aLeft.anims.isPlaying){
+                this.track1aLeft.play('track1Animation');
+                this.track1aRight.play('track1Animation');
+            }
         }else{
             this.body.velocity.set(0);
+            if(this.track1aLeft.anims.isPlaying){
+                this.track1aLeft.anims.stop();
+                this.track1aRight.anims.stop();
+            }
         }
 
         const offset = new Phaser.Math.Vector2(0, -40);
@@ -46,6 +76,8 @@ class Enemy extends Phaser.GameObjects.Sprite {
 
     destroy() {
         this.gun.destroy();
+        this.track1aLeft.destroy();
+        this.track1aRight.destroy();
         super.destroy();
     }
 }
