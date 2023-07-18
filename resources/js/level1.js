@@ -20,13 +20,14 @@ class Level1 extends Phaser.Scene {
 
         this.projectiles = this.add.group();
 
-        const enemyHealth = 10;
-        const enemySpeed = this.player.speed * 0.25;
+        const enemyHealth = 100;
+        const enemySpeed = this.player.speed * 0.5;
+        const enemyFireRate = 1;
         this.enemies = this.add.group();
-        this.enemies.add(new Enemy(this, 105 * 8, 25 * 8, enemyHealth, enemySpeed));
-        this.enemies.add(new Enemy(this, 82 * 8, 16 * 8, enemyHealth, enemySpeed));
-        this.enemies.add(new Enemy(this, 63 * 8, 32 * 8, enemyHealth, enemySpeed));
-        this.enemies.add(new Enemy(this, 25 * 8, 25 * 8, enemyHealth, enemySpeed));
+        this.enemies.add(new Enemy(this, 105 * 8, 25 * 8, enemyHealth, enemySpeed, enemyFireRate));
+        this.enemies.add(new Enemy(this, 82 * 8, 16 * 8, enemyHealth, enemySpeed, enemyFireRate));
+        this.enemies.add(new Enemy(this, 63 * 8, 32 * 8, enemyHealth, enemySpeed, enemyFireRate));
+        this.enemies.add(new Enemy(this, 25 * 8, 25 * 8, enemyHealth, enemySpeed, enemyFireRate));
 
         this.physics.add.collider(this.player, this.wallsLayer);
         this.physics.add.collider(this.enemies, this.wallsLayer);

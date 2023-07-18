@@ -24,14 +24,17 @@ class Level3 extends Phaser.Scene {
 
     this.projectiles = this.add.group();
 
-    const enemyHealth = 50;
-    const enemySpeed = this.player.speed * 0.75;
+    const enemyHealth = 500;
+    const enemySpeed = this.player.speed * 1.5;
+    const enemyFireRate = 3;
     this.enemies = this.add.group();
-    this.enemies.add(new Enemy(this, 35 * 8, 7 * 8, enemyHealth, enemySpeed));
-    this.enemies.add(new Enemy(this, 9 * 8, 40 * 8, enemyHealth, enemySpeed));
-    this.enemies.add(new Enemy(this, 56 * 8, 4 * 8, enemyHealth, enemySpeed));
-    this.enemies.add(new Enemy(this, 80 * 8, 41 * 8, enemyHealth, enemySpeed));
-    this.enemies.add(new Enemy(this, 100 * 8, 7 * 8, enemyHealth, enemySpeed));
+    this.enemies.add(new Enemy(this, 35 * 8, 7 * 8, enemyHealth, enemySpeed, enemyFireRate));
+    this.enemies.add(new Enemy(this, 9 * 8, 40 * 8, enemyHealth, enemySpeed, enemyFireRate));
+    this.enemies.add(new Enemy(this, 56 * 8, 4 * 8, enemyHealth, enemySpeed, enemyFireRate));
+    this.enemies.add(new Enemy(this, 80 * 8, 41 * 8, enemyHealth, enemySpeed, enemyFireRate));
+    this.enemies.add(new Enemy(this, 100 * 8, 7 * 8, enemyHealth, enemySpeed, enemyFireRate));
+
+    // todo: add health pick-up
 
     this.physics.add.collider(this.player, this.wallsLayer);
     this.physics.add.collider(this.enemies, this.wallsLayer);

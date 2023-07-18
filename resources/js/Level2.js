@@ -24,14 +24,15 @@ class Level2 extends Phaser.Scene {
 
     this.projectiles = this.add.group();
 
-    const enemyHealth = 20;
-    const enemySpeed = this.player.speed * 0.5;
+    const enemyHealth = 200;
+    const enemySpeed = this.player.speed;
+    const enemyFireRate = 2;
     this.enemies = this.add.group();
-    this.enemies.add(new Enemy(this, 25 * 8, 16 * 8, enemyHealth, enemySpeed));
-    this.enemies.add(new Enemy(this, 25 * 8, 34 * 8, enemyHealth, enemySpeed));
-    this.enemies.add(new Enemy(this, 4 * 8, 9 * 8, enemyHealth, enemySpeed));
-    this.enemies.add(new Enemy(this, 85 * 8, 25 * 8, enemyHealth, enemySpeed));
-    this.enemies.add(new Enemy(this, 100 * 8, 25 * 8, enemyHealth, enemySpeed));
+    this.enemies.add(new Enemy(this, 25 * 8, 16 * 8, enemyHealth, enemySpeed, enemyFireRate));
+    this.enemies.add(new Enemy(this, 25 * 8, 34 * 8, enemyHealth, enemySpeed, enemyFireRate));
+    this.enemies.add(new Enemy(this, 4 * 8, 9 * 8, enemyHealth, enemySpeed, enemyFireRate));
+    this.enemies.add(new Enemy(this, 85 * 8, 25 * 8, enemyHealth, enemySpeed, enemyFireRate));
+    this.enemies.add(new Enemy(this, 100 * 8, 25 * 8, enemyHealth, enemySpeed, enemyFireRate));
 
     this.physics.add.collider(this.player, this.wallsLayer);
     this.physics.add.collider(this.enemies, this.wallsLayer);

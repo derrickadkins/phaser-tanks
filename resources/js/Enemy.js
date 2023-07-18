@@ -1,5 +1,5 @@
 class Enemy extends Phaser.GameObjects.Sprite {
-    constructor(scene, x, y, health, speed) {
+    constructor(scene, x, y, health, speed, fireRate) {
         super(scene, x, y, 'hull1');
 
         this.scale = settings.scale;
@@ -7,6 +7,7 @@ class Enemy extends Phaser.GameObjects.Sprite {
         this.maxHealth = health;
         this.health = health;
         this.speed = speed;
+        this.fireRate = fireRate;
         this.trackOffset = 11;
         this.healthOffset = 25;
         this.maxHealthBarWidth = 50;
@@ -94,7 +95,7 @@ class Enemy extends Phaser.GameObjects.Sprite {
         // fire LightShell at player every 1 second
         if (this.scene.time.now > this.lastFired) {
             this.scene.projectiles.add(new LightShell(this.scene, this.x + offset.x, this.y + offset.y, this.rotation, this));
-            this.lastFired = this.scene.time.now + 1000;
+            this.lastFired = this.scene.time.now + (1000 / this.fireRate);
         }
     }
 
