@@ -19,6 +19,12 @@ class Level3 extends Phaser.Scene {
 
     this.player = new Player(this, playerStartX, playerStartY);
 
+    this.wsadKeys = this.input.keyboard.addKeys({
+      up: Phaser.Input.Keyboard.KeyCodes.W,
+      down: Phaser.Input.Keyboard.KeyCodes.S,
+      left: Phaser.Input.Keyboard.KeyCodes.A,
+      right: Phaser.Input.Keyboard.KeyCodes.D
+    });
     this.cursorKeys = this.input.keyboard.createCursorKeys();
     this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
@@ -34,7 +40,7 @@ class Level3 extends Phaser.Scene {
     this.enemies.add(new Enemy(this, 80 * 8, 41 * 8, enemyHealth, enemySpeed, enemyFireRate));
     this.enemies.add(new Enemy(this, 100 * 8, 7 * 8, enemyHealth, enemySpeed, enemyFireRate));
 
-    // todo: add health pick-up
+    this.healthPack = this.physics.add.sprite(42 * 8, 38 * 8, 'healthPack').setScale(settings.scale * 0.5);
 
     this.physics.add.collider(this.player, this.wallsLayer);
     this.physics.add.collider(this.enemies, this.wallsLayer);
@@ -44,6 +50,7 @@ class Level3 extends Phaser.Scene {
     this.physics.add.collider(this.projectiles, this.wallsLayer, this.projectileWallCollision, null, this);
     this.physics.add.overlap(this.enemies, this.projectiles, this.enemyProjectileCollision, null, this);
     this.physics.add.overlap(this.player, this.projectiles, this.playerProjectileCollision, null, this);
+    this.physics.add.overlap(this.player, this.healthPack, this.playerHealthPackCollision, null, this);
 
     // Add the pointerdown event listener
     this.input.on('pointerdown', this.player.handlePointerDown, this);
@@ -83,6 +90,13 @@ class Level3 extends Phaser.Scene {
       player.hit();
       projectile.destroy();
     }
+  }
+
+  // Handle collision between player and health pack
+  playerHealthPackCollision(player, healthPack) {
+    player.health += 500;
+    if (player.health > player.maxHealth) player.health = player.maxHealth;
+    healthPack.destroy();
   }
 
   // Handle level complete
