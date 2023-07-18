@@ -3,7 +3,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         super(scene, x, y, 'hull2');
 
         this.scale = settings.scale;
-        this.health = 500;
+        this.maxHealth = 500;
+        this.health = this.maxHealth;
         this.speed = 50;
         this.trackOffset = 11;
         this.gunOffset = 5;
@@ -180,7 +181,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     updateHealthBar() {
-        const barWidth = 100 * (this.health / 500);
+        const barWidth = 100 * (this.health / this.maxHealth);
         this.healthBar.clear();
         this.healthBar.fillStyle(0xff0000);
         this.healthBar.fillRect(10, 10, barWidth, 5);
