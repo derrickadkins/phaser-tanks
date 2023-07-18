@@ -6,8 +6,6 @@ var config = {
     width: '100%',
     height: '100%',
   },
-  width: 200 * 8,
-  height: 100 * 8,
   backgroundColor: 0x000000,
   scene: [TitleScreen, Level1],
   disableContextMenu: true,
