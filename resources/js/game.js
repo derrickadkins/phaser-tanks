@@ -1,3 +1,6 @@
+var settings = {
+  scale: 0.15
+}
 var config = {
   type: Phaser.AUTO,
   parent: 'game',
@@ -9,7 +12,7 @@ var config = {
     autoCenter: Phaser.Scale.CENTER_BOTH
   },
   backgroundColor: 0x000000,
-  scene: [TitleScreen, Level1],
+  scene: [TitleScreen, Level1, Level2, Level3, Level4],
   disableContextMenu: true,
   physics: {
     default: "arcade",

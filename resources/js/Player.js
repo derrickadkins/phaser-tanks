@@ -2,27 +2,28 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
         super(scene, x, y, 'hull2');
 
-        this.healthBar = scene.add.graphics();
-        this.healthBar.fillStyle(0xff0000);
-        this.healthBar.fillRect(10, 10, 100, 20);
-
-        this.track1aLeft = scene.physics.add.sprite(x, y, 'track1A');
-        this.track1aLeft.x -= 20;
-        this.track1aLeft.scale = 0.25;
-
-        this.track1aRight = scene.physics.add.sprite(x, y, 'track1A');
-        this.track1aRight.x += 20;
-        this.track1aRight.scale = 0.25;
-
-        this.gun = scene.physics.add.sprite(x, y + 10, 'gun2');
-        this.gun.setOrigin(0.5, 0.65);
-        this.gun.scale = 0.25;
-        this.gun.depth = 1;
-
-        this.scale = 0.25;
-
+        this.scale = settings.scale;
         this.health = 500;
         this.speed = 50;
+        this.trackOffset = 11;
+        this.gunOffset = 5;
+
+        this.healthBar = scene.add.graphics();
+        this.healthBar.fillStyle(0xff0000);
+        this.healthBar.fillRect(10, 10, 100, 5);
+
+        this.track1aLeft = scene.physics.add.sprite(x, y, 'track1A');
+        this.track1aLeft.x -= this.trackOffset;
+        this.track1aLeft.scale = this.scale;
+
+        this.track1aRight = scene.physics.add.sprite(x, y, 'track1A');
+        this.track1aRight.x += this.trackOffset;
+        this.track1aRight.scale = this.scale;
+
+        this.gun = scene.physics.add.sprite(x, y + this.gunOffset, 'gun2');
+        this.gun.setOrigin(0.5, 0.65);
+        this.gun.scale = this.scale;
+        this.gun.depth = 1;
 
         scene.add.existing(this)
         scene.physics.world.enableBody(this);
@@ -35,7 +36,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         if (Phaser.Input.Keyboard.JustDown(this.scene.spacebar)) {
             // Calculate the offset based on the gun's rotation
-            const offset = new Phaser.Math.Vector2(0, -30);
+            const offset = new Phaser.Math.Vector2(0, -10);
             Phaser.Math.Rotate(offset, this.gun.rotation);
             this.scene.projectiles.add(new LightShell(this.scene, this.gun.x + offset.x, this.gun.y + offset.y, this.gun.rotation, this));
         }
@@ -71,13 +72,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.rotation = angle + Phaser.Math.DegToRad(90);
 
             // Set the position and rotation for the left track sprite
-            this.track1aLeft.x = this.x + Math.cos(this.rotation) * 20;
-            this.track1aLeft.y = this.y + Math.sin(this.rotation) * 20;
+            this.track1aLeft.x = this.x + Math.cos(this.rotation) * this.trackOffset;
+            this.track1aLeft.y = this.y + Math.sin(this.rotation) * this.trackOffset;
             this.track1aLeft.rotation = this.rotation;
 
             // Set the position and rotation for the right track sprite
-            this.track1aRight.x = this.x - Math.cos(this.rotation) * 20;
-            this.track1aRight.y = this.y - Math.sin(this.rotation) * 20;
+            this.track1aRight.x = this.x - Math.cos(this.rotation) * this.trackOffset;
+            this.track1aRight.y = this.y - Math.sin(this.rotation) * this.trackOffset;
             this.track1aRight.rotation = this.rotation;
 
             if (!this.track1aLeft.anims.isPlaying) {
@@ -85,8 +86,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 this.track1aRight.play('track1Animation');
             }
 
-            this.gun.x = this.x - Math.sin(this.rotation) * 10;
-            this.gun.y = this.y + Math.cos(this.rotation) * 10;
+            this.gun.x = this.x - Math.sin(this.rotation) * this.gunOffset;
+            this.gun.y = this.y + Math.cos(this.rotation) * this.gunOffset;
         } else {
             pointer.startTime = 0;
             this.body.velocity.set(0);
@@ -139,7 +140,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         const barWidth = 100 * (this.health / 500);
         this.healthBar.clear();
         this.healthBar.fillStyle(0xff0000);
-        this.healthBar.fillRect(10, 10, barWidth, 20);
+        this.healthBar.fillRect(10, 10, barWidth, 5);
 
         if (this.health <= 0) {
             new Explosion(this.scene, this.x, this.y);

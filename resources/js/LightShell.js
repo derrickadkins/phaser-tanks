@@ -5,7 +5,7 @@ class LightShell extends Phaser.GameObjects.Sprite {
         scene.add.existing(this);
         scene.physics.world.enableBody(this);
         this.rotation = rotation;
-        this.scale = 0.5;
+        this.scale = settings.scale * 2;
         this.firedBy = firedBy;
     }
 

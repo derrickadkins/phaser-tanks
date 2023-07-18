@@ -92,7 +92,6 @@ class Level2 extends Phaser.Scene {
     clickToContinueTxt.setDepth(2);
     this.physics.pause();
     this.input.on('pointerdown', () => {
-      this.scene.add("level3", Level3, true);
       this.scene.start("level3");
     });
   }
