@@ -43,7 +43,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     movePlayerManager() {
-
         const pointer = this.scene.input.activePointer;
         const distance = Phaser.Math.Distance.Between(this.x, this.y, pointer.x, pointer.y);
 
@@ -59,17 +58,42 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             const elapsedTime = this.scene.time.now - pointer.startTime;
             const holdThreshold = 750; // Adjust the hold threshold duration as needed
 
-            if (elapsedTime < holdThreshold) return;
+            if (elapsedTime > holdThreshold) {
 
-            // Calculate the angle between the player and the cursor
-            const angle = Phaser.Math.Angle.Between(this.x, this.y, pointer.x, pointer.y);
+                // Calculate the angle between the player and the cursor
+                const angle = Phaser.Math.Angle.Between(this.x, this.y, pointer.x, pointer.y);
 
-            // Set the velocity for the player to move towards the cursor
-            this.body.velocity.x = Math.cos(angle) * this.speed;
-            this.body.velocity.y = Math.sin(angle) * this.speed;
+                // Set the velocity for the player to move towards the cursor
+                this.body.velocity.x = Math.cos(angle) * this.speed;
+                this.body.velocity.y = Math.sin(angle) * this.speed;
+            } else {
+                this.body.velocity.set(0);
+            }
+        } else {
+            pointer.startTime = 0;
 
-            // Convert the angle to degrees and apply it to the player's rotation
-            this.rotation = angle + Phaser.Math.DegToRad(90);
+            // check wsad keys and move player
+            if (this.scene.wsadKeys.left.isDown) {
+                this.body.velocity.x = -this.speed;
+            } else if (this.scene.wsadKeys.right.isDown) {
+                this.body.velocity.x = this.speed;
+            } else {
+                this.body.velocity.x = 0;
+            }
+
+            if (this.scene.wsadKeys.up.isDown) {
+                this.body.velocity.y = -this.speed;
+            } else if (this.scene.wsadKeys.down.isDown) {
+                this.body.velocity.y = this.speed;
+            } else {
+                this.body.velocity.y = 0;
+            }
+        }
+
+
+        // rotate body to match velocity
+        if (this.body.velocity.x != 0 || this.body.velocity.y != 0) {
+            this.rotation = Math.atan2(this.body.velocity.y, this.body.velocity.x) + Math.PI / 2;
 
             // Set the position and rotation for the left track sprite
             this.track1aLeft.x = this.x + Math.cos(this.rotation) * this.trackOffset;
@@ -81,20 +105,16 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.track1aRight.y = this.y - Math.sin(this.rotation) * this.trackOffset;
             this.track1aRight.rotation = this.rotation;
 
+            this.gun.x = this.x - Math.sin(this.rotation) * this.gunOffset;
+            this.gun.y = this.y + Math.cos(this.rotation) * this.gunOffset;
+
             if (!this.track1aLeft.anims.isPlaying) {
                 this.track1aLeft.play('track1Animation');
                 this.track1aRight.play('track1Animation');
             }
-
-            this.gun.x = this.x - Math.sin(this.rotation) * this.gunOffset;
-            this.gun.y = this.y + Math.cos(this.rotation) * this.gunOffset;
-        } else {
-            pointer.startTime = 0;
-            this.body.velocity.set(0);
-            if (this.track1aLeft.anims.isPlaying) {
-                this.track1aLeft.anims.stop();
-                this.track1aRight.anims.stop();
-            }
+        } else if (this.track1aLeft.anims.isPlaying) {
+            this.track1aLeft.anims.stop();
+            this.track1aRight.anims.stop();
         }
     }
 
