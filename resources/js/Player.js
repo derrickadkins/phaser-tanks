@@ -2,6 +2,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
         super(scene, x, y, 'hull2');
 
+        this.healthBar = scene.add.graphics();
+        this.healthBar.fillStyle(0xff0000);
+        this.healthBar.fillRect(10, 10, 100, 20);
+
         this.track1aLeft = scene.physics.add.sprite(x, y, 'track1A');
         this.track1aLeft.x -= 20;
         this.track1aLeft.scale = 0.25;
@@ -130,6 +134,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     hit() {
         this.health -= 10;
+
+        // Update the health bar width based on the player's health value
+        const barWidth = 100 * (this.health / 500);
+        this.healthBar.clear();
+        this.healthBar.fillStyle(0xff0000);
+        this.healthBar.fillRect(10, 10, barWidth, 20);
+
         if (this.health <= 0) {
             new Explosion(this.scene, this.x, this.y);
             const gameOverTxt = this.scene.add.text(55 * 8, 15 * 8, "Game Over", { font: "65px Arial", fill: "#ff0000" });
