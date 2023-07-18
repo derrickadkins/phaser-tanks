@@ -13,13 +13,19 @@ class TitleScreen extends Phaser.Scene {
         this.load.image('gun1', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Weapon_Color_B/Gun_01.png');
         this.load.image('gun2', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Weapon_Color_A/Gun_02.png');
         this.load.image('lightShell', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Effects/Light_Shell.png');
+
+        this.load.image('title_bg', 'resources/assets/titleScreen.jpeg');
     }
 
     create() {
+        const bg = this.add.image(60 * 8, 25 * 8, 'title_bg');
+        //bg.setOrigin(0, 0);
+        bg.setScale(3);
+
         // Add "Tanks" in the center of the screen
-        this.add.text(75 * 8, 25 * 8, "Tanks", { font: "65px Arial", fill: "#ffffff" });
+        this.add.text(15 * 8, 6 * 8, "Tanks", { font: "65px Arial", fill: "#0" }).setOrigin(0.5);
         // Add "Click to start" at the bottom of the screen
-        this.add.text(75 * 8, 50 * 8, "Click to start", { font: "32px Arial", fill: "#ffffff" });
+        this.add.text(15 * 8, 15 * 8, "Click to start", { font: "32px Arial", fill: "#0" }).setOrigin(0.5);
 
         // Add the pointerdown event listener
         this.input.on('pointerdown', this.handlePointerDown, this);

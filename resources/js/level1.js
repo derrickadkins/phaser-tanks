@@ -4,13 +4,13 @@ class Level1 extends Phaser.Scene {
     }
 
     create() {
-        this.map = this.make.tilemap({ key: 'level_1', tilewidth: 200, tileheight: 100 });
+        this.map = this.make.tilemap({ key: 'level_1', tilewidth: 112, tileheight: 49 });
         const tileset = this.map.addTilesetImage('jawbreaker_tiles', 'tiles');
         const groundLayer = this.map.createLayer("ground", tileset, 0, 0);
         this.wallsLayer = this.map.createLayer("walls", tileset, 0, 0);
         this.wallsLayer.setCollisionBetween(1, 67);
 
-        const playerStartX = 25 * 8;
+        const playerStartX = 5 * 8;
         const playerStartY = 25 * 8;
 
         this.player = new Player(this, playerStartX, playerStartY);
@@ -23,10 +23,10 @@ class Level1 extends Phaser.Scene {
         const enemyHealth = 10;
         const enemySpeed = this.player.speed * 0.25;
         this.enemies = this.add.group();
-        this.enemies.add(new Enemy(this, 50 * 8, 25 * 8, enemyHealth, enemySpeed));
-        this.enemies.add(new Enemy(this, 75 * 8, 50 * 8, enemyHealth, enemySpeed));
-        this.enemies.add(new Enemy(this, 50 * 8, 75 * 8, enemyHealth, enemySpeed));
-        this.enemies.add(new Enemy(this, 25 * 8, 50 * 8, enemyHealth, enemySpeed));
+        this.enemies.add(new Enemy(this, 105 * 8, 25 * 8, enemyHealth, enemySpeed));
+        this.enemies.add(new Enemy(this, 82 * 8, 16 * 8, enemyHealth, enemySpeed));
+        this.enemies.add(new Enemy(this, 63 * 8, 32 * 8, enemyHealth, enemySpeed));
+        this.enemies.add(new Enemy(this, 25 * 8, 25 * 8, enemyHealth, enemySpeed));
 
         this.physics.add.collider(this.player, this.wallsLayer);
         this.physics.add.collider(this.enemies, this.wallsLayer);
@@ -79,8 +79,12 @@ class Level1 extends Phaser.Scene {
 
     // Handle level complete
     handleLevelComplete() {
-        this.add.text(75 * 8, 50 * 8, "Level Complete", { font: "65px Arial", fill: "#00ff00" }).setDepth(2);
-        this.add.text(75 * 8, 75 * 8, "Click to continue", { font: "32px Arial", fill: "#00ff00" }).setDepth(2);
+        const lvlCompleteTxt = this.add.text(55 * 8, 15 * 8, "Level Complete", { font: "65px Arial", fill: "#00ff00" });
+        lvlCompleteTxt.setOrigin(0.5);
+        lvlCompleteTxt.setDepth(2);
+        const clickToContinueTxt = this.add.text(55 * 8, 35 * 8, "Click to continue", { font: "32px Arial", fill: "#00ff00" });
+        clickToContinueTxt.setOrigin(0.5);
+        clickToContinueTxt.setDepth(2);
         this.physics.pause();
         this.input.on('pointerdown', () => {
             this.scene.add("level2", Level2, true);
