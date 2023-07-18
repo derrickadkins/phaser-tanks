@@ -1,8 +1,9 @@
 class LightShell extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y, rotation, firedBy) {
+        new Flash(scene, x, y, rotation);
         super(scene, x, y, 'lightShell');
         scene.add.existing(this);
-        scene.physics.world.enableBody(this);    
+        scene.physics.world.enableBody(this);
         this.rotation = rotation;
         this.scale = 0.5;
         this.firedBy = firedBy;

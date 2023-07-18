@@ -131,8 +131,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     hit() {
         this.health -= 10;
         if (this.health <= 0) {
-            this.scene.add.text(75 * 8, 50 * 8, "Game Over", { font: "65px Arial", fill: "#ff0000" }).setDepth(2);
-            this.scene.add.text(75 * 8, 75 * 8, "Click to restart", { font: "32px Arial", fill: "#ff0000" }).setDepth(2);
+            new Explosion(this.scene, this.x, this.y);
+            const gameOverTxt = this.scene.add.text(55 * 8, 15 * 8, "Game Over", { font: "65px Arial", fill: "#ff0000" });
+            gameOverTxt.setOrigin(0.5);
+            gameOverTxt.setDepth(2);
+            const clickToRestartTxt = this.scene.add.text(55 * 8, 35 * 8, "Click to restart", { font: "32px Arial", fill: "#ff0000" });
+            clickToRestartTxt.setOrigin(0.5);
+            clickToRestartTxt.setDepth(2);
             this.scene.physics.pause();
             this.scene.input.on('pointerdown', () => {
                 this.scene.scene.restart();

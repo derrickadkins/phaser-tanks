@@ -90,6 +90,7 @@ class Enemy extends Phaser.GameObjects.Sprite {
             if (this.scene.enemies.getChildren().length == 1) {
                 this.scene.events.emit('levelComplete');
             }
+            new Explosion(this.scene, this.x, this.y);
             this.destroy();
         }
     }

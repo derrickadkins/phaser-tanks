@@ -1,21 +1,21 @@
-class Level2 extends Phaser.Scene {
+class Level3 extends Phaser.Scene {
   constructor() {
-    super("level2");
+    super("level3");
   }
 
   preload() {
-    this.load.tilemapTiledJSON('level_2', 'resources/assets/map/jawbreaker/level_2.json');
+    this.load.tilemapTiledJSON('level_3', 'resources/assets/map/jawbreaker/level_3.json');
   }
 
   create() {
-    this.map = this.make.tilemap({ key: 'level_2', tilewidth: 112, tileheight: 49 });
+    this.map = this.make.tilemap({ key: 'level_3', tilewidth: 112, tileheight: 49 });
     const tileset = this.map.addTilesetImage('jawbreaker_tiles', 'tiles');
     const groundLayer = this.map.createLayer("ground", tileset, 0, 0);
     this.wallsLayer = this.map.createLayer("walls", tileset, 0, 0);
     this.wallsLayer.setCollisionBetween(1, 67);
 
-    const playerStartX = 5 * 8;
-    const playerStartY = 25 * 8;
+    const playerStartX = 10 * 8;
+    const playerStartY = 10 * 8;
 
     this.player = new Player(this, playerStartX, playerStartY);
 
@@ -24,14 +24,14 @@ class Level2 extends Phaser.Scene {
 
     this.projectiles = this.add.group();
 
-    const enemyHealth = 20;
-    const enemySpeed = this.player.speed * 0.5;
+    const enemyHealth = 50;
+    const enemySpeed = this.player.speed * 0.75;
     this.enemies = this.add.group();
-    this.enemies.add(new Enemy(this, 25 * 8, 16 * 8, enemyHealth, enemySpeed));
-    this.enemies.add(new Enemy(this, 25 * 8, 34 * 8, enemyHealth, enemySpeed));
-    this.enemies.add(new Enemy(this, 4 * 8, 9 * 8, enemyHealth, enemySpeed));
-    this.enemies.add(new Enemy(this, 85 * 8, 25 * 8, enemyHealth, enemySpeed));
-    this.enemies.add(new Enemy(this, 100 * 8, 25 * 8, enemyHealth, enemySpeed));
+    this.enemies.add(new Enemy(this, 35 * 8, 7 * 8, enemyHealth, enemySpeed));
+    this.enemies.add(new Enemy(this, 9 * 8, 40 * 8, enemyHealth, enemySpeed));
+    this.enemies.add(new Enemy(this, 56 * 8, 4 * 8, enemyHealth, enemySpeed));
+    this.enemies.add(new Enemy(this, 80 * 8, 41 * 8, enemyHealth, enemySpeed));
+    this.enemies.add(new Enemy(this, 100 * 8, 7 * 8, enemyHealth, enemySpeed));
 
     this.physics.add.collider(this.player, this.wallsLayer);
     this.physics.add.collider(this.enemies, this.wallsLayer);
@@ -92,8 +92,7 @@ class Level2 extends Phaser.Scene {
     clickToContinueTxt.setDepth(2);
     this.physics.pause();
     this.input.on('pointerdown', () => {
-      this.scene.add("level3", Level3, true);
-      this.scene.start("level3");
+      this.scene.start("titleScreen");
     });
   }
 }
