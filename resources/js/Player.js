@@ -156,11 +156,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     hit() {
         this.health -= 10;
 
-        // Update the health bar width based on the player's health value
-        const barWidth = 100 * (this.health / 500);
-        this.healthBar.clear();
-        this.healthBar.fillStyle(0xff0000);
-        this.healthBar.fillRect(10, 10, barWidth, 5);
+        this.updateHealthBar();
 
         if (this.health <= 0) {
             new Explosion(this.scene, this.x, this.y);
@@ -175,6 +171,19 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 this.scene.scene.restart();
             });
         }
+    }
+
+    heal(health) {
+        this.health += health;
+        if (this.health > this.maxHealth) this.health = this.maxHealth;
+        this.updateHealthBar();
+    }
+
+    updateHealthBar() {
+        const barWidth = 100 * (this.health / 500);
+        this.healthBar.clear();
+        this.healthBar.fillStyle(0xff0000);
+        this.healthBar.fillRect(10, 10, barWidth, 5);
     }
 
     destroy() {

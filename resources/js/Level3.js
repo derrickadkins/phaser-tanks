@@ -40,7 +40,9 @@ class Level3 extends Phaser.Scene {
     this.enemies.add(new Enemy(this, 80 * 8, 41 * 8, enemyHealth, enemySpeed, enemyFireRate));
     this.enemies.add(new Enemy(this, 100 * 8, 7 * 8, enemyHealth, enemySpeed, enemyFireRate));
 
-    this.healthPack = this.physics.add.sprite(42 * 8, 38 * 8, 'healthPack').setScale(settings.scale * 0.5);
+    this.healthPacks = this.add.group();
+    this.healthPacks.add(new HealthPack(this, 42 * 8, 38 * 8, 500));
+    this.healthPacks.add(new HealthPack(this, 70 * 8, 5 * 8, 500));
 
     this.physics.add.collider(this.player, this.wallsLayer);
     this.physics.add.collider(this.enemies, this.wallsLayer);
@@ -50,7 +52,7 @@ class Level3 extends Phaser.Scene {
     this.physics.add.collider(this.projectiles, this.wallsLayer, this.projectileWallCollision, null, this);
     this.physics.add.overlap(this.enemies, this.projectiles, this.enemyProjectileCollision, null, this);
     this.physics.add.overlap(this.player, this.projectiles, this.playerProjectileCollision, null, this);
-    this.physics.add.overlap(this.player, this.healthPack, this.playerHealthPackCollision, null, this);
+    this.physics.add.overlap(this.player, this.healthPacks, this.playerHealthPackCollision, null, this);
 
     // Add the pointerdown event listener
     this.input.on('pointerdown', this.player.handlePointerDown, this);
@@ -94,8 +96,7 @@ class Level3 extends Phaser.Scene {
 
   // Handle collision between player and health pack
   playerHealthPackCollision(player, healthPack) {
-    player.health += 500;
-    if (player.health > player.maxHealth) player.health = player.maxHealth;
+    player.heal(healthPack.health);
     healthPack.destroy();
   }
 

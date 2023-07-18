@@ -40,6 +40,11 @@ class Level4 extends Phaser.Scene {
     this.enemies.add(new Enemy(this, 95 * 8, 33 * 8, enemyHealth, enemySpeed, enemyFireRate));
     this.enemies.add(new Enemy(this, 61 * 8, 8 * 8, enemyHealth, enemySpeed, enemyFireRate));
 
+    this.healthPacks = this.add.group();
+    this.healthPacks.add(new HealthPack(this, 95 * 8, 40 * 8, 500));
+    this.healthPacks.add(new HealthPack(this, 35 * 8, 45 * 8, 500));
+    this.healthPacks.add(new HealthPack(this, 15 * 8, 15 * 8, 500));
+
     this.physics.add.collider(this.player, this.wallsLayer);
     this.physics.add.collider(this.enemies, this.wallsLayer);
     this.physics.add.collider(this.enemies, this.player);
@@ -48,6 +53,7 @@ class Level4 extends Phaser.Scene {
     this.physics.add.collider(this.projectiles, this.wallsLayer, this.projectileWallCollision, null, this);
     this.physics.add.overlap(this.enemies, this.projectiles, this.enemyProjectileCollision, null, this);
     this.physics.add.overlap(this.player, this.projectiles, this.playerProjectileCollision, null, this);
+    this.physics.add.overlap(this.player, this.healthPacks, this.playerHealthPackCollision, null, this);
 
     // Add the pointerdown event listener
     this.input.on('pointerdown', this.player.handlePointerDown, this);
@@ -89,12 +95,18 @@ class Level4 extends Phaser.Scene {
     }
   }
 
+  // Handle collision between player and health pack
+  playerHealthPackCollision(player, healthPack) {
+    player.heal(healthPack.health);
+    healthPack.destroy();
+  }
+
   // Handle level complete
   handleLevelComplete() {
-    const lvlCompleteTxt = this.add.text(55 * 8, 15 * 8, "Level Complete", { font: "65px Arial", fill: "#00ff00" });
+    const lvlCompleteTxt = this.add.text(55 * 8, 15 * 8, "You Won!", { font: "65px Arial", fill: "#00ff00" });
     lvlCompleteTxt.setOrigin(0.5);
     lvlCompleteTxt.setDepth(2);
-    const clickToContinueTxt = this.add.text(55 * 8, 35 * 8, "Click to continue", { font: "32px Arial", fill: "#00ff00" });
+    const clickToContinueTxt = this.add.text(55 * 8, 35 * 8, "Click to start over", { font: "32px Arial", fill: "#00ff00" });
     clickToContinueTxt.setOrigin(0.5);
     clickToContinueTxt.setDepth(2);
     this.physics.pause();
