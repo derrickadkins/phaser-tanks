@@ -2,6 +2,12 @@ class Enemy extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y, health, speed) {
         super(scene, x, y, 'hull1');
 
+        this.offset = 50;
+        this.healthBar = scene.add.graphics();
+        this.healthBar.fillStyle(0xff0000);
+        this.healthBar.fillRect(x - this.offset, y - this.offset, 100, 5);
+        this.healthBar.depth = 1;
+
         this.track1aLeft = scene.physics.add.sprite(x, y, 'track1A');
         this.track1aLeft.x -= 20;
         this.track1aLeft.scale = 0.25;
@@ -17,6 +23,7 @@ class Enemy extends Phaser.GameObjects.Sprite {
         this.scale = 0.25;
         this.lastFired = 0;
 
+        this.maxHealth = health;
         this.health = health;
         this.speed = speed;
 
@@ -25,6 +32,12 @@ class Enemy extends Phaser.GameObjects.Sprite {
     }
 
     update() {
+        const barWidth = 100 * (this.health / this.maxHealth);
+        this.healthBar.clear();
+        this.healthBar.fillStyle(0xff0000);
+        this.healthBar.fillRect(this.x - this.offset, this.y - this.offset, barWidth, 5);
+        this.healthBar.depth = 1;
+
         // detect if enemy has line of sight to player
         var ray = new Phaser.Geom.Line(this.x, this.y, this.scene.player.x, this.scene.player.y);
         var walls = this.scene.map.getTilesWithinShape(ray, { isNotEmpty: true }, this.scene.camera, this.scene.wallsLayer);
@@ -96,6 +109,7 @@ class Enemy extends Phaser.GameObjects.Sprite {
     }
 
     destroy() {
+        this.healthBar.destroy();
         this.gun.destroy();
         this.track1aLeft.destroy();
         this.track1aRight.destroy();
