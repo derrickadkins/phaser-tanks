@@ -17,7 +17,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.scale = 0.25;
 
-        this.health = 100;
+        this.health = 500;
         this.speed = 50;
 
         scene.add.existing(this)
@@ -75,8 +75,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.track1aRight.x = this.x - Math.cos(this.rotation) * 20;
             this.track1aRight.y = this.y - Math.sin(this.rotation) * 20;
             this.track1aRight.rotation = this.rotation;
-            
-            if(!this.track1aLeft.anims.isPlaying){
+
+            if (!this.track1aLeft.anims.isPlaying) {
                 this.track1aLeft.play('track1Animation');
                 this.track1aRight.play('track1Animation');
             }
@@ -86,7 +86,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         } else {
             pointer.startTime = 0;
             this.body.velocity.set(0);
-            if(this.track1aLeft.anims.isPlaying){
+            if (this.track1aLeft.anims.isPlaying) {
                 this.track1aLeft.anims.stop();
                 this.track1aRight.anims.stop();
             }
@@ -97,7 +97,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         //use arrows to rotate gun
         if (this.scene.cursorKeys.left.isDown) {
             this.gun.rotation -= 0.05;
-        }else if (this.scene.cursorKeys.right.isDown) {
+        } else if (this.scene.cursorKeys.right.isDown) {
             this.gun.rotation += 0.05;
         }
     }
@@ -111,7 +111,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         const upY = pointer.upY;
 
         const distance = Phaser.Math.Distance.Between(downX, downY, upX, upY);
-    
+
         if (distance <= movementThreshold) {
             //console.log('Tap event:'+pointer.id);
             // stop the propagation of the event to the rest of the game objects
@@ -131,7 +131,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     hit() {
         this.health -= 10;
         if (this.health <= 0) {
-            this.scene.scene.start('gameOver');
+            this.scene.add.text(75 * 8, 50 * 8, "Game Over", { font: "65px Arial", fill: "#ff0000" }).setDepth(2);
+            this.scene.add.text(75 * 8, 75 * 8, "Click to restart", { font: "32px Arial", fill: "#ff0000" }).setDepth(2);
+            this.scene.physics.pause();
+            this.scene.input.on('pointerdown', () => {
+                this.scene.scene.restart();
+            });
         }
     }
 

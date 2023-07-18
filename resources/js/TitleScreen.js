@@ -5,7 +5,7 @@ class TitleScreen extends Phaser.Scene {
 
     preload() {
         this.load.image('tiles', 'resources/assets/map/jawbreaker/jawbreaker_tiles.png');
-        this.load.tilemapTiledJSON('map', 'resources/assets/map/jawbreaker/level_1.json');
+        this.load.tilemapTiledJSON('level_1', 'resources/assets/map/jawbreaker/level_1.json');
         this.load.image('track1A', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Tracks/Track_1_A.png');
         this.load.image('track1B', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Tracks/Track_1_B.png');
         this.load.image('hull1', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Hulls_Color_B/Hull_01.png');
@@ -17,9 +17,9 @@ class TitleScreen extends Phaser.Scene {
 
     create() {
         // Add "Tanks" in the center of the screen
-        this.add.text(400, 300, "Tanks", { font: "65px Arial", fill: "#ffffff" }).setOrigin(0.5);
+        this.add.text(75 * 8, 25 * 8, "Tanks", { font: "65px Arial", fill: "#ffffff" });
         // Add "Click to start" at the bottom of the screen
-        this.add.text(400, 500, "Click to start", { font: "32px Arial", fill: "#ffffff" }).setOrigin(0.5);
+        this.add.text(75 * 8, 50 * 8, "Click to start", { font: "32px Arial", fill: "#ffffff" });
 
         // Add the pointerdown event listener
         this.input.on('pointerdown', this.handlePointerDown, this);
@@ -27,6 +27,7 @@ class TitleScreen extends Phaser.Scene {
         // Enable multiple touch inputs
         this.input.addPointer(2);
 
+        if (this.anims.get('track1Animation') != undefined) return;
         this.anims.create({
             key: 'track1Animation',
             frames: [

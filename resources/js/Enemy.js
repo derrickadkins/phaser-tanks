@@ -30,7 +30,7 @@ class Enemy extends Phaser.GameObjects.Sprite {
         var walls = this.scene.map.getTilesWithinShape(ray, { isNotEmpty: true }, this.scene.camera, this.scene.wallsLayer);
         if (walls.length > 0) {
             this.body.velocity.set(0);
-            if(this.track1aLeft.anims.isPlaying){
+            if (this.track1aLeft.anims.isPlaying) {
                 this.track1aLeft.anims.stop();
                 this.track1aRight.anims.stop();
             }
@@ -56,19 +56,19 @@ class Enemy extends Phaser.GameObjects.Sprite {
 
         this.gun.x = this.x;
         this.gun.y = this.y;
-        
+
         // move enemy towards player while enemy is 100 units away
         if (Phaser.Math.Distance.Between(this.x, this.y, this.scene.player.x, this.scene.player.y) > 100) {
             this.body.velocity.x = Math.cos(angle) * this.speed;
             this.body.velocity.y = Math.sin(angle) * this.speed;
-            
-            if(!this.track1aLeft.anims.isPlaying){
+
+            if (!this.track1aLeft.anims.isPlaying) {
                 this.track1aLeft.play('track1Animation');
                 this.track1aRight.play('track1Animation');
             }
-        }else{
+        } else {
             this.body.velocity.set(0);
-            if(this.track1aLeft.anims.isPlaying){
+            if (this.track1aLeft.anims.isPlaying) {
                 this.track1aLeft.anims.stop();
                 this.track1aRight.anims.stop();
             }
@@ -87,6 +87,9 @@ class Enemy extends Phaser.GameObjects.Sprite {
     hit() {
         this.health -= 10;
         if (this.health <= 0) {
+            if (this.scene.enemies.getChildren().length == 1) {
+                this.scene.events.emit('levelComplete');
+            }
             this.destroy();
         }
     }
