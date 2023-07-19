@@ -13,6 +13,7 @@ class TitleScreen extends Phaser.Scene {
         this.load.image('gun2', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Weapon_Color_A/Gun_02.png');
         this.load.image('lightShell', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Effects/Light_Shell.png');
         this.load.image('healthPack', 'resources/assets/healthPack.png');
+        this.load.image('backArrow', 'resources/assets/arrow_back_FILL1_wght700_GRAD0_opsz48_white.png');
 
         this.load.image('track1A', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Tracks/Track_1_A.png');
         this.load.image('track1B', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Tracks/Track_1_B.png');
@@ -51,8 +52,14 @@ class TitleScreen extends Phaser.Scene {
         // Add "Tanks" in the center of the screen
         this.add.text(15 * 8, 10 * 8, "Tanks", { font: "65px Arial", fill: "#0" }).setOrigin(0.5);
 
+        // add settings text at top right
+        this.settingsTxt = this.add.text(110 * 8, 2 * 8, "Settings", { font: "32px Arial", fill: "#0" }).setOrigin(1, 0).setInteractive();
+        this.settingsTxt.on('pointerdown', () => {
+            this.scene.start('settings');
+        });
+
         // add opaque black rectangle
-        const rect = this.add.rectangle(55 * 8, 15 * 8, 75 * 8, 30 * 8, 0x000000, 0.5).setOrigin(0.5, 0);
+        const rect = this.add.rectangle(55 * 8, 13 * 8, 50 * 8, 30 * 8, 0x000000, 0.5).setOrigin(0.5, 0);
         // get center of rectangle
         const rectCenterX = rect.getCenter().x;
         const topTxtY = 17 * 8;
