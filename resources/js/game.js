@@ -1,5 +1,6 @@
 var settings = {
-  scale: 0.15
+  scale: 0.15,
+  difficulty: 1,
 }
 var config = {
   type: Phaser.AUTO,

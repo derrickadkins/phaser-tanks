@@ -49,12 +49,27 @@ class TitleScreen extends Phaser.Scene {
         bg.setScale(3);
 
         // Add "Tanks" in the center of the screen
-        this.add.text(15 * 8, 6 * 8, "Tanks", { font: "65px Arial", fill: "#0" }).setOrigin(0.5);
-        // Add "Click to start" at the bottom of the screen
-        this.add.text(15 * 8, 15 * 8, "Click to start", { font: "32px Arial", fill: "#0" }).setOrigin(0.5);
+        this.add.text(15 * 8, 10 * 8, "Tanks", { font: "65px Arial", fill: "#0" }).setOrigin(0.5);
 
-        // Add the pointerdown event listener
-        this.input.on('pointerdown', this.handlePointerDown, this);
+        // add opaque black rectangle
+        const rect = this.add.rectangle(55 * 8, 15 * 8, 75 * 8, 30 * 8, 0x000000, 0.5).setOrigin(0.5, 0);
+        // get center of rectangle
+        const rectCenterX = rect.getCenter().x;
+        const topTxtY = 17 * 8;
+
+        // add difficulty texts
+        this.add.text(rectCenterX, topTxtY, "Choose a difficulty", { font: "32px Arial", fill: "#ffffff" }).setOrigin(0.5);
+        this.easyTxt = this.add.text(rectCenterX, topTxtY + 7 * 8, "Easy", { font: "32px Arial", fill: "#ffffff" }).setOrigin(0.5);
+        this.mediumTxt = this.add.text(rectCenterX, topTxtY + 14 * 8, "Medium", { font: "32px Arial", fill: "#ffffff" }).setOrigin(0.5);
+        this.hardTxt = this.add.text(rectCenterX, topTxtY + 21 * 8, "Hard", { font: "32px Arial", fill: "#ffffff" }).setOrigin(0.5);
+
+        this.easyTxt.setInteractive();
+        this.mediumTxt.setInteractive();
+        this.hardTxt.setInteractive();
+
+        this.easyTxt.on('pointerdown', () => { this.startGame(1); });
+        this.mediumTxt.on('pointerdown', () => { this.startGame(2); });
+        this.hardTxt.on('pointerdown', () => { this.startGame(3); });
 
         // Enable multiple touch inputs
         this.input.addPointer(2);
@@ -102,7 +117,8 @@ class TitleScreen extends Phaser.Scene {
         });
     }
 
-    handlePointerDown(pointer) {
+    startGame(difficulty) {
+        settings.difficulty = difficulty;
         this.levelMusic.stop();
         this.scene.start("level1");
     }

@@ -4,14 +4,23 @@ class Level1 extends Level {
     }
 
     create() {
-        const playerStartX = 5 * 8;
-        const playerStartY = 25 * 8;
+        this.player = new Player(this, 5 * 8, 25 * 8);
 
-        this.player = new Player(this, playerStartX, playerStartY);
+        // hard settings
+        var enemyHealth = 100;
+        var enemySpeed = this.player.speed * 0.5;
+        var enemyFireRate = 1;
 
-        const enemyHealth = 100;
-        const enemySpeed = this.player.speed * 0.5;
-        const enemyFireRate = 1;
+        if (settings.difficulty == 1) {
+            enemyHealth = 40;
+            enemySpeed = this.player.speed * 0.3;
+            enemyFireRate = .5;
+        } else if (settings.difficulty == 2) {
+            enemyHealth = 60;
+            enemySpeed = this.player.speed * 0.4;
+            enemyFireRate = .75;
+        }
+
         this.enemies = this.add.group();
         this.enemies.add(new Enemy(this, 105 * 8, 25 * 8, enemyHealth, enemySpeed, enemyFireRate));
         this.enemies.add(new Enemy(this, 82 * 8, 16 * 8, enemyHealth, enemySpeed, enemyFireRate));

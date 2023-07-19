@@ -10,9 +10,21 @@ class Level2 extends Level {
   create() {
     this.player = new Player(this, 5 * 8, 25 * 8);
 
-    const enemyHealth = 200;
-    const enemySpeed = this.player.speed;
-    const enemyFireRate = 2;
+    // hard settings
+    var enemyHealth = 200;
+    var enemySpeed = this.player.speed;
+    var enemyFireRate = 2;
+
+    if (settings.difficulty == 1) {
+      enemyHealth = 50;
+      enemySpeed = this.player.speed * 0.5;
+      enemyFireRate = 1;
+    } else if (settings.difficulty == 2) {
+      enemyHealth = 100;
+      enemySpeed = this.player.speed * 0.75;
+      enemyFireRate = 1.5;
+    }
+
     this.enemies = this.add.group();
     this.enemies.add(new Enemy(this, 25 * 8, 16 * 8, enemyHealth, enemySpeed, enemyFireRate));
     this.enemies.add(new Enemy(this, 25 * 8, 34 * 8, enemyHealth, enemySpeed, enemyFireRate));
