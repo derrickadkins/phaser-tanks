@@ -13,7 +13,10 @@ class TitleScreen extends Phaser.Scene {
         this.load.image('gun2', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Weapon_Color_A/Gun_02.png');
         this.load.image('lightShell', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Effects/Light_Shell.png');
         this.load.image('healthPack', 'resources/assets/healthPack.png');
+
         this.load.image('backArrow', 'resources/assets/arrow_back_FILL1_wght700_GRAD0_opsz48_white.png');
+        this.load.image('plus', 'resources/assets/add_FILL1_wght700_GRAD0_opsz48_white.png');
+        this.load.image('minus', 'resources/assets/remove_FILL1_wght700_GRAD0_opsz48_white.png');
 
         this.load.image('track1A', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Tracks/Track_1_A.png');
         this.load.image('track1B', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Tracks/Track_1_B.png');
@@ -42,12 +45,16 @@ class TitleScreen extends Phaser.Scene {
     }
 
     create() {
-        this.levelMusic = this.sound.add('levelMusic');
-        this.levelMusic.play({ loop: true });
+        // check if levelMusic is already playing
+        this.levelMusic = this.sound.get('levelMusic');
+        if (!this.levelMusic) {
+            this.levelMusic = this.sound.add('levelMusic');
+            this.levelMusic.setVolume(settings.musicVolume / 100).play({ loop: true });
+        } else if (!this.levelMusic.isPlaying) {
+            this.levelMusic.setVolume(settings.musicVolume / 100).play({ loop: true });
+        }
 
-        const bg = this.add.image(60 * 8, 25 * 8, 'title_bg');
-        //bg.setOrigin(0, 0);
-        bg.setScale(3);
+        this.add.image(60 * 8, 25 * 8, 'title_bg').setScale(3);
 
         // Add "Tanks" in the center of the screen
         this.add.text(15 * 8, 10 * 8, "Tanks", { font: "65px Arial", fill: "#0" }).setOrigin(0.5);

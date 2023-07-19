@@ -3,7 +3,7 @@ class Explosion extends Phaser.GameObjects.Sprite {
     super(scene, x, y, "explosion");
     scene.add.existing(this);
     this.scale = settings.scale * 2;
-    scene.sound.add("explosionSound").play();
+    scene.sound.add("explosionSound").setVolume(settings.soundEffectsVolume / 100).play();
     this.play("explosionAnimation");
   }
 }
@@ -27,7 +27,7 @@ class LightShell extends Phaser.GameObjects.Sprite {
     this.rotation = rotation;
     this.scale = settings.scale * 2;
     this.firedBy = firedBy;
-    scene.sound.add('lightShellSound').play();
+    scene.sound.add('lightShellSound').setVolume(settings.soundEffectsVolume / 100).play();
   }
 
   update() {

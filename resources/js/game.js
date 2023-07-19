@@ -1,8 +1,8 @@
 var settings = {
   scale: 0.15,
   difficulty: 1,
-  musicVolume: 0.5,
-  soundEffectsVolume: 0.5
+  musicVolume: 50,
+  soundEffectsVolume: 50
 }
 var config = {
   type: Phaser.AUTO,

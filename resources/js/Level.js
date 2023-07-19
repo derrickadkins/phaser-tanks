@@ -39,6 +39,7 @@ class Level extends Phaser.Scene {
     this.events.on('gameOver', this.handleGameOver, this);
 
     this.levelMusic = this.sound.add('levelMusic');
+    this.levelMusic.setVolume(settings.musicVolume / 100);
     this.levelMusic.play({ loop: true });
   }
 
@@ -84,7 +85,7 @@ class Level extends Phaser.Scene {
   // Handle level complete
   handleLevelComplete(topTxt, bottomTxt, nextSceneKey) {
     this.levelMusic.stop();
-    this.sound.add('levelCompleteSound').play();
+    this.sound.add('levelCompleteSound').setVolume(settings.soundEffectsVolume / 100).play();
     const lvlCompleteTxt = this.add.text(55 * 8, 15 * 8, topTxt, { font: "65px Arial", fill: "#00ff00" });
     lvlCompleteTxt.setOrigin(0.5);
     lvlCompleteTxt.setDepth(2);
@@ -102,7 +103,7 @@ class Level extends Phaser.Scene {
   // Handle game over
   handleGameOver() {
     this.levelMusic.stop();
-    this.sound.add('gameOverSound').play();
+    this.sound.add('gameOverSound').setVolume(settings.soundEffectsVolume / 100).play();
     const gameOverTxt = this.add.text(55 * 8, 15 * 8, "Game Over", { font: "65px Arial", fill: "#ff0000" });
     gameOverTxt.setOrigin(0.5);
     gameOverTxt.setDepth(2);

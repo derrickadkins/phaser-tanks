@@ -156,7 +156,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     hit() {
         this.health -= 10;
-
         this.updateHealthBar();
 
         if (this.health <= 0) {
@@ -166,7 +165,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     heal(health) {
-        this.scene.sound.add('healSound').play();
+        this.scene.sound.add('healSound').setVolume(settings.soundEffectsVolume / 100).play();
         this.health += health;
         if (this.health > this.maxHealth) this.health = this.maxHealth;
         this.updateHealthBar();
