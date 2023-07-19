@@ -7,6 +7,7 @@ class LightShell extends Phaser.GameObjects.Sprite {
         this.rotation = rotation;
         this.scale = settings.scale * 2;
         this.firedBy = firedBy;
+        scene.sound.add('lightShellSound').play();
     }
 
     update() {

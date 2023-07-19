@@ -58,8 +58,11 @@ class Level4 extends Phaser.Scene {
     // Add the pointerdown event listener
     this.input.on('pointerdown', this.player.handlePointerDown, this);
 
-    // catpure levelComplete event
     this.events.on('levelComplete', this.handleLevelComplete, this);
+    this.events.on('gameOver', this.handleGameOver, this);
+
+    this.levelMusic = this.sound.add('levelMusic');
+    this.levelMusic.play({ loop: true });
   }
 
   update() {
@@ -103,15 +106,37 @@ class Level4 extends Phaser.Scene {
 
   // Handle level complete
   handleLevelComplete() {
+    this.levelMusic.stop();
+    this.sound.add('levelCompleteSound').play();
     const lvlCompleteTxt = this.add.text(55 * 8, 15 * 8, "You Won!", { font: "65px Arial", fill: "#00ff00" });
     lvlCompleteTxt.setOrigin(0.5);
     lvlCompleteTxt.setDepth(2);
-    const clickToContinueTxt = this.add.text(55 * 8, 35 * 8, "Click to start over", { font: "32px Arial", fill: "#00ff00" });
-    clickToContinueTxt.setOrigin(0.5);
-    clickToContinueTxt.setDepth(2);
-    this.physics.pause();
-    this.input.on('pointerdown', () => {
-      this.scene.start("titleScreen");
+    this.time.delayedCall(1000, () => {
+      const clickToContinueTxt = this.add.text(55 * 8, 35 * 8, "Click to start over", { font: "32px Arial", fill: "#00ff00" });
+      clickToContinueTxt.setOrigin(0.5);
+      clickToContinueTxt.setDepth(2);
+      this.physics.pause();
+      this.input.on('pointerdown', () => {
+        this.scene.start("titleScreen");
+      });
+    });
+  }
+
+  // Handle game over
+  handleGameOver() {
+    this.levelMusic.stop();
+    this.sound.add('gameOverSound').play();
+    const gameOverTxt = this.add.text(55 * 8, 15 * 8, "Game Over", { font: "65px Arial", fill: "#ff0000" });
+    gameOverTxt.setOrigin(0.5);
+    gameOverTxt.setDepth(2);
+    this.time.delayedCall(1000, () => {
+      const clickToRestartTxt = this.add.text(55 * 8, 35 * 8, "Click to restart", { font: "32px Arial", fill: "#ff0000" });
+      clickToRestartTxt.setOrigin(0.5);
+      clickToRestartTxt.setDepth(2);
+      this.physics.pause();
+      this.input.on('pointerdown', () => {
+        this.scene.restart();
+      });
     });
   }
 }

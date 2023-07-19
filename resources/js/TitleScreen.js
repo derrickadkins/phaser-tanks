@@ -31,9 +31,19 @@ class TitleScreen extends Phaser.Scene {
         this.load.image('flash3', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Effects/Flash_A_03.png');
         this.load.image('flash4', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Effects/Flash_A_04.png');
         this.load.image('flash5', 'resources/assets/sprites/free-2d-battle-tank-game-assets/PNG/Effects/Flash_A_05.png');
+
+        this.load.audio('levelCompleteSound', 'resources/assets/audio/mixkit-completion-of-a-level-2063.wav');
+        this.load.audio('lightShellSound', 'resources/assets/audio/mixkit-game-gun-shot-1662.mp3');
+        this.load.audio('gameOverSound', 'resources/assets/audio/mixkit-arcade-chiptune-explosion-1691.wav');
+        this.load.audio('explosionSound', 'resources/assets/audio/mixkit-arcade-game-explosion-2759.wav');
+        this.load.audio('healSound', 'resources/assets/audio/mixkit-arcade-bonus-alert-767.wav');
+        this.load.audio('levelMusic', 'resources/assets/audio/2022-02-04_-_War_Crown_-_www.FesliyanStudios.com.mp3');
     }
 
     create() {
+        this.levelMusic = this.sound.add('levelMusic');
+        this.levelMusic.play({ loop: true });
+
         const bg = this.add.image(60 * 8, 25 * 8, 'title_bg');
         //bg.setOrigin(0, 0);
         bg.setScale(3);
@@ -93,6 +103,7 @@ class TitleScreen extends Phaser.Scene {
     }
 
     handlePointerDown(pointer) {
+        this.levelMusic.stop();
         this.scene.start("level1");
     }
 }
